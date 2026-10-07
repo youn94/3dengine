@@ -10,14 +10,45 @@ anglev=0
 jx,jy, jz=0, 0, 0
 posj=(jx,jy,jz,anglev)
 c=True
-zez=5
+
 
 point=[
-    (1, 1, zez),
-    (-1, 1, zez),
-    (-1, -1, zez),
-    (1, -1, zez)
+    (1, 1, 5),
+    (-1, 1, 5),
+    (-1, -1, 5),
+    (1, -1, 5)
+    ],[
+    (1, 1, 7),
+    (-1, 1, 7),
+    (-1, -1, 7),
+    (1, -1, 7)
+    ],[
+    (-1, 1, 5),
+    (-1, 1, 7),
+    (-1, -1, 7),
+    (-1, -1, 5)
+    ],[
+    (1, 1, 7),
+    (1, 1, 5),
+    (1, -1, 5),
+    (1, -1, 7)
+    ],[
+    (1, 1, 5),
+    (1, 1, 7),
+    (-1, 1, 7),
+    (-1, 1, 5)
+    ],[
+    (1, -1, 5),
+    (-1, -1, 5),
+    (-1, -1, 7),
+    (1, -1, 7)
     ]
+
+
+
+
+
+
 
 def rotate(x, y, z, angle):
     rad=math.radians(angle)
@@ -44,8 +75,21 @@ def project(x, y, z):
             
             
 
-def polygone():
-    
+def polygone(point, normal):
+    cx=sum(p[0] for p in point)/4
+    cy=sum(p[1] for p in point)/4
+    cz=sum(p[2] for p in point)/4
+
+    vx=jx-cx
+    vy=jy-cy
+    vz=jz-cz
+
+    nx, ny, nz=normal
+    vis=nx*vx+ny*vy+nz*vz
+    if vis<=0:
+        return
+
+
     point2d=[]
     for x, y, z in point:
         z=z-jz
@@ -59,11 +103,28 @@ def polygone():
         scx, scy = project(x, y, z)
         point2d.append((scx, scy))
     
+    lumiere=(0, 1, 0)
 
-    pygame.draw.polygon(sc, 'white', point2d,1)
+    x1, y1, z1 =normal
+    lum=x1*lumiere[0]+y1*lumiere[1]+z1*lumiere[2]
+    lum=0.2+0.8*max(0, lum)
+    color=(
+         int(255*lum),
+            int(255*lum),
+            int(255*lum)
+
+             )
+    pygame.draw.polygon(sc, color, point2d,0)
 
     ##[(xx*1, xx*3), (xx*2, yy*3), (xx*2, yy*2)]
 
+def cube():
+    polygone(point[0],(0,0,-1))
+    polygone(point[1],(0,0,1))
+    polygone(point[2],(-1,0,0))
+    polygone(point[3],(1,0,0))
+    polygone(point[4],(0,1,0))
+    polygone(point[5],(0,-1,0))
 
 
 
@@ -84,7 +145,11 @@ while c:
         radius=math.radians(anglev)
         jx-=math.sin(radius)*0.010
         jz-=math.cos(radius)*0.010
-        
+
+    if keys[pygame.K_w]:
+        jy+=0.010
+    if keys[pygame.K_s]:
+        jy-=0.010
 
     if keys[pygame.K_RIGHT]:
         anglev+=1
@@ -95,6 +160,6 @@ while c:
     sc.fill((0, 0, 0))
 
     
-    polygone()
+    cube()
 
     pygame.display.update()
