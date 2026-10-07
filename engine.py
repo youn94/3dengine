@@ -72,7 +72,30 @@ def project(x, y, z):
             scx=400+xx*300
             scy=300-yy*300
             return scx, scy
+
+
+def degrader(point,color1,color2):
+
+        x1, y1=point[0]
+        x2, y2=point[1]
+        x3, y3=point[2]
+        x4, y4=point[3]
+       
+        for i in range(100):
+            t=i/99
+
+            gx= x1*(1-t)+x4*t
+            gy= y1*(1-t)+y4*t
             
+            dx= x2*(1-t)+x3*t
+            dy= y2*(1-t)+y3*t
+            
+
+            r=int(color1[0]*(1-t)+color2[0]*t)
+            g=int(color1[1]*(1-t)+color2[1]*t)
+            b=int(color1[2]*(1-t)+color2[2]*t)
+
+            pygame.draw.line(sc, (r, g, b), (gx,gy), (dx,dy), 10)     
             
 
 def polygone(point, normal):
@@ -114,7 +137,8 @@ def polygone(point, normal):
             int(255*lum)
 
              )
-    pygame.draw.polygon(sc, color, point2d,0)
+    degrader(point2d, (255,255,255  ), (50, 50, 50))
+    #pygame.draw.polygon(sc, color, point2d,0)
 
     ##[(xx*1, xx*3), (xx*2, yy*3), (xx*2, yy*2)]
 
