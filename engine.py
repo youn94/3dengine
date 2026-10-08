@@ -75,10 +75,10 @@ def project(x, y, z):
             
             
 
-def polygone(point, normal):
-    cx=sum(p[0] for p in point)/4
-    cy=sum(p[1] for p in point)/4
-    cz=sum(p[2] for p in point)/4
+def polygone(point, normal,cbx,cby,cbz):
+    cx=sum(p[0] for p in point)/4+cbx
+    cy=sum(p[1] for p in point)/4+cby
+    cz=sum(p[2] for p in point)/4+cbz
 
     vx=jx-cx
     vy=jy-cy
@@ -91,8 +91,17 @@ def polygone(point, normal):
 
 
     point2d=[]
+
+    
+
     for x, y, z in point:
+        z+=cbz
+        x+=cbx
+        y+=cby
+
+
         z=z-jz
+        print("tt",z)
         x=x-jx
         y=y-jy
         
@@ -118,13 +127,13 @@ def polygone(point, normal):
 
     ##[(xx*1, xx*3), (xx*2, yy*3), (xx*2, yy*2)]
 
-def cube():
-    polygone(point[0],(0,0,-1))
-    polygone(point[1],(0,0,1))
-    polygone(point[2],(-1,0,0))
-    polygone(point[3],(1,0,0))
-    polygone(point[4],(0,1,0))
-    polygone(point[5],(0,-1,0))
+def cube(x,y,z):
+    polygone(point[0],(0,0,-1),x,y,z)
+    polygone(point[1],(0,0,1),x,y,z)
+    polygone(point[2],(-1,0,0),x,y,z)
+    polygone(point[3],(1,0,0),x,y,z)
+    polygone(point[4],(0,1,0),x,y,z)
+    polygone(point[5],(0,-1,0),x,y,z)
 
 
 
@@ -160,6 +169,7 @@ while c:
     sc.fill((0, 0, 0))
 
     
-    cube()
+    cube(4, 0, 4)
+    cube(1, 0, 1)
 
     pygame.display.update()
